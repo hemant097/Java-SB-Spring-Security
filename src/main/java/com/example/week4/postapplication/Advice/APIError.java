@@ -12,5 +12,5 @@ public class APIError {
     private HttpStatus httpStatus;
     private  String message;
     private  String errorRecordedTime;
-    private List<String> subErrors;
+//    private List<String> subErrors;
 }
