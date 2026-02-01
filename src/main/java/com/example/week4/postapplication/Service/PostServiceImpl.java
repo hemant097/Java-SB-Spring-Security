@@ -2,7 +2,7 @@ package com.example.week4.postapplication.Service;
 
 import com.example.week4.postapplication.DTO.PostDTO;
 import com.example.week4.postapplication.Entities.Post;
-import com.example.week4.postapplication.Exceptions.ResourceNotFound;
+import com.example.week4.postapplication.Exceptions.ResourceNotFoundException;
 import com.example.week4.postapplication.Repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -44,7 +44,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDTO findPostById(Long postId) {
         Post post = postRepo.findById(postId)
-                .orElseThrow(()-> new ResourceNotFound("post not found with id "+postId));
+                .orElseThrow(()-> new ResourceNotFoundException("post not found with id "+postId));
 
         return modelMapper.map(post,PostDTO.class);
     }

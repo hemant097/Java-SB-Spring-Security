@@ -1,6 +1,6 @@
 package com.example.week4.postapplication.Advice;
 
-import com.example.week4.postapplication.Exceptions.ResourceNotFound;
+import com.example.week4.postapplication.Exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,8 +14,8 @@ public class GlobalExceptionHandler {
 
 
 
-    @ExceptionHandler(ResourceNotFound.class)
-    public ResponseEntity<APIError> resourceNotFound(ResourceNotFound rnf) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<APIError> resourceNotFound(ResourceNotFoundException rnf) {
 
         String currDT = giveCurrentDateTime();
 
