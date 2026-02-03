@@ -1,8 +1,12 @@
 package com.example.week4.postapplication.Config;
 
+import com.example.week4.postapplication.Filter.JwtAuthFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -14,9 +18,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
+
+    private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -24,17 +32,18 @@ public class WebSecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/post","/auth/**").permitAll()
-                        .requestMatchers("/post/**").hasAnyRole("ADMIN")
+//                        .requestMatchers("/post/**").hasAnyRole("ADMIN")
                         .anyRequest().authenticated() )
                 .csrf(csrfConfig -> csrfConfig.disable())
                 .sessionManagement( sessionConfig -> sessionConfig
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 //                .formLogin(Customizer.withDefaults());
 
         return httpSecurity.build();
     }
 
-//    @Bean
+//    @Bean Configuring users for in memory user details manager
 //    UserDetailsService inMemoryUserDetailsService(){
 //        UserDetails normalUser = User.withUsername("hemant")
 //                .password(passwordEncoder().encode("hemu123"))
@@ -45,7 +54,10 @@ public class WebSecurityConfig {
 //        return new InMemoryUserDetailsManager(adminUser,normalUser);
 //    }
 
+
     @Bean
-    PasswordEncoder passwordEncoder(){ return new BCryptPasswordEncoder();}
+    AuthenticationManager authenticationManager (AuthenticationConfiguration authConfig) throws Exception {
+    return authConfig.getAuthenticationManager();
+    }
 
 }

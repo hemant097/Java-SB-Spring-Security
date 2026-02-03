@@ -1,5 +1,5 @@
 
-INSERT INTO week5db.user
-(id,email,password)
+INSERT INTO week5db.posts
+(description,title)
 VALUES
-    (1,'hemant@gmail.com','{noop}alpha-beta-gamma');
+    ("mazha pahila post","first marathi post");

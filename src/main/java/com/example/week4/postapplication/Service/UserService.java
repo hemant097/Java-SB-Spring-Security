@@ -31,7 +31,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(username)
                 .orElseThrow(() -> new ResourceNotFoundException("user with email "+username+" not found"));
 
-        //as our user Entity is implementing UserDetails, thus we can return this
+        //as our user Entity is implementing UserDetails, thus we can return UserDetails object
     }
 
     public UserDto signUp(SignupDto signupDto){
@@ -49,5 +49,11 @@ public class UserService implements UserDetailsService {
 
         return modelMapper.map(savedUser,UserDto.class);
 
+    }
+
+
+    public User getUserById(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow( () -> new UsernameNotFoundException("no user is present with id:"+userId));
     }
 }

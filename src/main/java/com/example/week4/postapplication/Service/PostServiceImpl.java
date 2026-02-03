@@ -2,15 +2,20 @@ package com.example.week4.postapplication.Service;
 
 import com.example.week4.postapplication.DTO.PostDTO;
 import com.example.week4.postapplication.Entities.Post;
+import com.example.week4.postapplication.Entities.User;
 import com.example.week4.postapplication.Exceptions.ResourceNotFoundException;
 import com.example.week4.postapplication.Repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -43,6 +48,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO findPostById(Long postId) {
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        log.info("user {}",user);
         Post post = postRepo.findById(postId)
                 .orElseThrow(()-> new ResourceNotFoundException("post not found with id "+postId));
 
