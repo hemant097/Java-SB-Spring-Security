@@ -1,5 +1,6 @@
 package com.example.week4.postapplication.Config;
 
+import com.example.week4.postapplication.Advice.JwtAuthEntryPoint;
 import com.example.week4.postapplication.Filter.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final JwtAuthEntryPoint jwtAuthEntryPoint;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -37,7 +39,8 @@ public class WebSecurityConfig {
                 .csrf(csrfConfig -> csrfConfig.disable())
                 .sessionManagement( sessionConfig -> sessionConfig
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthEntryPoint));
 //                .formLogin(Customizer.withDefaults());
 
         return httpSecurity.build();

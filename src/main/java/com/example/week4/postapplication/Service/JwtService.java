@@ -2,9 +2,11 @@ package com.example.week4.postapplication.Service;
 
 import com.example.week4.postapplication.Entities.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -37,13 +39,13 @@ public class JwtService {
         //this takes the encoded header and payload , and passes header, payload, secret key through the algorithm,
         // and produces an encoded control signature, if it doesn't match with the token provided, authentication is failed
 
-        Claims claims = Jwts.parser()
-                .verifyWith(getSecretKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+            Claims claims = Jwts.parser()
+                    .verifyWith(getSecretKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
 
-        return Long.valueOf(claims.getSubject());
+            return Long.valueOf(claims.getSubject());
 
     }
 }

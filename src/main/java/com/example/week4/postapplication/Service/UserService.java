@@ -4,15 +4,19 @@ import com.example.week4.postapplication.DTO.SignupDto;
 import com.example.week4.postapplication.DTO.UserDto;
 import com.example.week4.postapplication.Entities.User;
 import com.example.week4.postapplication.Exceptions.ResourceNotFoundException;
+import com.example.week4.postapplication.Exceptions.UserAlreadyExistsException;
 import com.example.week4.postapplication.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -29,7 +33,7 @@ public class UserService implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
-                .orElseThrow(() -> new ResourceNotFoundException("user with email "+username+" not found"));
+                .orElseThrow(() -> new BadCredentialsException("user with email "+username+" not found"));
 
         //as our user Entity is implementing UserDetails, thus we can return UserDetails object
     }
@@ -38,7 +42,7 @@ public class UserService implements UserDetailsService {
         Optional<User> user = userRepository.findByEmail(signupDto.getEmail());
 
         if(user.isPresent())
-            throw new BadCredentialsException("user with email already exists :"+signupDto.getEmail());
+            throw new UserAlreadyExistsException(signupDto.getEmail());
 
         User toCreate = modelMapper.map(signupDto,User.class);
 
@@ -46,9 +50,7 @@ public class UserService implements UserDetailsService {
         toCreate.setPassword(passwordEncoder.encode(signupDto.getPassword()));
 
         User savedUser = userRepository.save(toCreate);
-
         return modelMapper.map(savedUser,UserDto.class);
-
     }
 
 
