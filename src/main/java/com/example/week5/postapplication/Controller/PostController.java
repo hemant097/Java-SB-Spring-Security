@@ -2,6 +2,7 @@ package com.example.week5.postapplication.Controller;
 
 import com.example.week5.postapplication.DTO.PostDto;
 import com.example.week5.postapplication.Service.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostDto> createNewPost(@RequestBody PostDto input){
+    public ResponseEntity<PostDto> createNewPost(@Valid @RequestBody PostDto input){
         return new ResponseEntity<>(postService.createPost(input), HttpStatus.OK);
     }
 

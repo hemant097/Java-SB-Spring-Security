@@ -8,6 +8,7 @@ import com.example.week5.postapplication.Service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,14 +25,14 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(path = "/signup")
-    public ResponseEntity<UserDto> signUpMethod(@RequestBody SignupDto signupDto){
+    public ResponseEntity<UserDto> signUpMethod(@Valid @RequestBody SignupDto signupDto){
 
         UserDto userDto = userService.signUp(signupDto);
         return ResponseEntity.ok(userDto);
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity<String> signUpMethod(@RequestBody LoginDto loginDto, HttpServletRequest request,
+    public ResponseEntity<String> signUpMethod(@Valid @RequestBody LoginDto loginDto, HttpServletRequest request,
                                                HttpServletResponse response){
 
         String token =  authService.login(loginDto);
