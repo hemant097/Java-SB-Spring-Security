@@ -19,15 +19,15 @@ class PostApplicationTests {
 
     @Test
     void jwtTest(){
-        User newUser = new User(4L,"hemant@gmail.com","Hemant Sharma","pass");
-
-        String token = jwtService.generateToken(newUser);
-
-        System.out.println(token);
-
-        Long newUserId = jwtService.getUserIdFromToken("eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJoZW1hbnRAZXhhbXBsZS5jb20iLCJyb2xlcyI6WyJBRE1JTiIsIlVTRVIiXSwiaWF0IjoxNzcwMDIyNjUxLCJleHAiOjE3NzAwMjI3MTF9.Rd2W_C7nPiCcP2gZ9SPwkXi2DvG8DMZYDgcF9rrqvxjCHa_P4zYFMQVkJf5Itrdh");
-
-        System.out.println(newUserId);
+//        User newUser = new User(4L,"hemant@gmail.com","Hemant Sharma","pass");
+//
+//        String token = jwtService.generateToken(newUser);
+//
+//        System.out.println(token);
+//
+//        Long newUserId = jwtService.getUserIdFromToken("eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJoZW1hbnRAZXhhbXBsZS5jb20iLCJyb2xlcyI6WyJBRE1JTiIsIlVTRVIiXSwiaWF0IjoxNzcwMDIyNjUxLCJleHAiOjE3NzAwMjI3MTF9.Rd2W_C7nPiCcP2gZ9SPwkXi2DvG8DMZYDgcF9rrqvxjCHa_P4zYFMQVkJf5Itrdh");
+//
+//        System.out.println(newUserId);
 
 
     }

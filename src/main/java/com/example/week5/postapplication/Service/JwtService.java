@@ -17,17 +17,31 @@ public class JwtService {
     @Value("${jwt.secretKey}")
     private String jwtSecretKey;
 
+    private final long oneMinute =60000L;
+
+    private final long sixMonths = oneMinute*60*24*30*6;
+
     private SecretKey getSecretKey(){
         return Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
     }
 
-    public String generateToken(User user){
+    public String generateAccessToken(User user){
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("email",user.getEmail())
                 .claim("roles", Set.of("ADMIN","USER"))
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis()+ 60000))
+                .expiration(new Date(System.currentTimeMillis()+ oneMinute))
+                .signWith(getSecretKey())
+                .compact();
+
+    }
+
+    public String generateRefreshToken(User user){
+        return Jwts.builder()
+                .subject(user.getId().toString())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis()+ sixMonths))
                 .signWith(getSecretKey())
                 .compact();
 
