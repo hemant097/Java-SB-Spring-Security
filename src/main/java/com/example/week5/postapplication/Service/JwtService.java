@@ -17,15 +17,14 @@ public class JwtService {
     @Value("${jwt.secretKey}")
     private String jwtSecretKey;
 
-    private final long oneMinute =60000L;
-
-    private final long sixMonths = oneMinute*60*24*30*6;
+    final long oneMinute = 60000L;
 
     private SecretKey getSecretKey(){
         return Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
     }
 
     public String generateAccessToken(User user){
+
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("email",user.getEmail())
@@ -38,6 +37,8 @@ public class JwtService {
     }
 
     public String generateRefreshToken(User user){
+        long sixMonths = oneMinute * 60 * 24 * 30 * 6;
+
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .issuedAt(new Date())

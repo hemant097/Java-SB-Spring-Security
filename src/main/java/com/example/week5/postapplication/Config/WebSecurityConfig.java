@@ -3,6 +3,7 @@ package com.example.week5.postapplication.Config;
 import com.example.week5.postapplication.Advice.JwtAuthEntryPoint;
 import com.example.week5.postapplication.Filter.JwtAuthFilter;
 import com.example.week5.postapplication.Filter.HttpLoggingFilter;
+import com.example.week5.postapplication.Handler.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,13 +22,14 @@ public class WebSecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
     private final HttpLoggingFilter loggingFilter;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/post","/auth/**").permitAll()
+                        .requestMatchers("/post","/auth/**","/error","/home.html").permitAll()
 //                        .requestMatchers("/post/**").hasAnyRole("ADMIN")
                         .anyRequest().authenticated() )
                 .csrf(csrfConfig -> csrfConfig.disable() )
@@ -35,7 +37,12 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) )
                 .addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(jwtAuthFilter, HttpLoggingFilter.class)
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthEntryPoint));
+                .oauth2Login( oAuth2Config -> oAuth2Config
+                        .failureUrl("/login?error=true")
+                        .successHandler(oAuth2SuccessHandler)
+                )
+//                .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthEntryPoint))
+                ;
 //                .formLogin(Customizer.withDefaults());
 
         return httpSecurity.build();

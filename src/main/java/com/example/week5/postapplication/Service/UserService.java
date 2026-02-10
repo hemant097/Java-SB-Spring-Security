@@ -32,6 +32,10 @@ public class UserService implements UserDetailsService {
         //as our user Entity is implementing UserDetails, thus we can return UserDetails object
     }
 
+    public User getUserByEmail(String email){
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
     public UserDto signUp(SignupDto signupDto){
         Optional<String> email = userRepository.findEmailByEmail( signupDto.getEmail() );
 
@@ -52,5 +56,9 @@ public class UserService implements UserDetailsService {
     public User getUserById(Long userId){
         return userRepository.findById(userId)
                 .orElseThrow( () -> new UsernameNotFoundException("no user is present with id:"+userId));
+    }
+
+    public User save(User newUser) {
+        return userRepository.save(newUser);
     }
 }
