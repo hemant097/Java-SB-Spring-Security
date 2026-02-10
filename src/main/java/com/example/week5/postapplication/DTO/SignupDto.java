@@ -1,9 +1,8 @@
 package com.example.week5.postapplication.DTO;
 
 import com.example.week5.postapplication.Annotations.PasswordValidation;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import com.example.week5.postapplication.Entities.Plan;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
@@ -19,4 +18,7 @@ public class SignupDto {
 
     @PasswordValidation
     private String password;
+
+    @NotNull(message = "plan is required")
+    private Plan plan;
 }

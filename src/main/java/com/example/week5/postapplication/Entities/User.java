@@ -24,6 +24,9 @@ public class User implements UserDetails {
     private String name;
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Plan plan;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

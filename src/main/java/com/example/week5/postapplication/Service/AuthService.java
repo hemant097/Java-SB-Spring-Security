@@ -2,9 +2,7 @@ package com.example.week5.postapplication.Service;
 
 import com.example.week5.postapplication.DTO.LoginDto;
 import com.example.week5.postapplication.DTO.LoginResponseDto;
-import com.example.week5.postapplication.Entities.SessionEntity;
 import com.example.week5.postapplication.Entities.User;
-import com.example.week5.postapplication.Exceptions.SessionAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,10 +26,11 @@ public class AuthService {
         User userEntity = (User)authentication.getPrincipal();
 
 //        SessionEntity isSessionPresent = sessionService.findSession(userEntity);
-
 //        if( isSessionPresent == null ){
             String accessToken =  jwtService.generateAccessToken(userEntity);
             String refreshToken = jwtService.generateRefreshToken(userEntity);
+
+            sessionService.createNewSession(userEntity,refreshToken);
 
             return new LoginResponseDto(userEntity.getId(), accessToken, refreshToken);
 
@@ -53,9 +52,14 @@ public class AuthService {
 
 }
     public LoginResponseDto refresh(String refreshToken){
-        //validates the refresh token, finds userId, checks if user is present, generates fresh access token for that
-        // user, returns a new login response dto
+        //validates the refresh token, finds userId
         Long userId = jwtService.getUserIdFromToken(refreshToken);
+
+//        If token is not expired, validate the session, if found, update its last used time
+        sessionService.validateSession(refreshToken);
+
+//        checks if user is present, generates fresh access token for that
+        // user, returns a new login response dto
 
         User user = userService.getUserById(userId);
 
