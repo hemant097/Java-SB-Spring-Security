@@ -11,13 +11,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/auth")
@@ -66,5 +66,63 @@ public class AuthController {
         LoginResponseDto loginResponseDto = authService.refresh(refreshToken);
 
         return ResponseEntity.ok(loginResponseDto);
+    }
+
+    @DeleteMapping(path = "/logout")
+    public ResponseEntity<String> logOutMethod(HttpServletRequest request, HttpServletResponse response){
+
+        String refreshToken = extractRefreshTokenFromHttpServletRequest(request);
+
+        long deleted = authService.logout(refreshToken);
+
+        StringBuilder message = new StringBuilder("logout successful");
+
+        if(deleted>0)
+            message.append("session deleted successfully");
+        else
+            setRefreshTokenCookieToNull(request,response);
+
+
+        return ResponseEntity.ok(message.toString());
+    }
+
+    @DeleteMapping(path = "/logoutall")
+    public ResponseEntity<String> logOutFromAllDevices(HttpServletRequest request, HttpServletResponse response){
+
+        String refreshToken = extractRefreshTokenFromHttpServletRequest(request);
+
+        long deleted = authService.logoutFromAllDevices(refreshToken);
+        StringBuilder message = new StringBuilder("Logout successful");
+
+        if(deleted>0)
+            message.append(deleted).append(" session deleted");
+        else
+            setRefreshTokenCookieToNull(request,response);
+
+        return ResponseEntity.ok(message.toString());
+    }
+
+
+    String extractRefreshTokenFromHttpServletRequest(HttpServletRequest request){
+
+        return Arrays.stream(request.getCookies())
+                 .filter(cookie -> "refreshToken".equals(cookie.getName()))
+                 .map(Cookie::getValue)
+                 .filter(value -> value!=null && !value.isBlank())
+                 .findFirst()
+                 .orElseThrow(()-> new AuthenticationServiceException("refresh token not found inside cookies"));
+    }
+
+
+    void setRefreshTokenCookieToNull(HttpServletRequest request, HttpServletResponse response){
+
+        String rToken = extractRefreshTokenFromHttpServletRequest(request);
+
+        if(rToken!=null) {
+            Cookie cookie = new Cookie("refreshToken", null);
+            cookie.setHttpOnly(true);
+            response.addCookie(cookie);
+        }
+
     }
 }

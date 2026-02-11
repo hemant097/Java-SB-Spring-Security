@@ -62,10 +62,21 @@ public class AuthService {
         // user, returns a new login response dto
 
         User user = userService.getUserById(userId);
-
         String accessToken = jwtService.generateAccessToken(user);
-
         return new LoginResponseDto(user.getId(), accessToken, refreshToken);
+
+    }
+
+    public Long logout(String refreshToken){
+
+        return sessionService.deleteSessions(refreshToken);
+    }
+
+    public long logoutFromAllDevices(String refreshToken){
+
+        Long userId = jwtService.getUserIdFromToken(refreshToken);
+
+        return sessionService.deleteAllSessions(userId);
 
     }
 }

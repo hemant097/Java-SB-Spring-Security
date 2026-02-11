@@ -3,6 +3,7 @@ package com.example.week5.postapplication.Service;
 import com.example.week5.postapplication.Entities.Session;
 import com.example.week5.postapplication.Entities.User;
 import com.example.week5.postapplication.Repository.SessionRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,17 @@ public class SessionService {
               .orElseThrow(() -> new SessionAuthenticationException(" session not found for refresh Token : "+refreshToken));
 
       session.setLastUsed(LocalDateTime.now());
+    }
+
+    @Transactional
+    long deleteSessions(String refreshToken){
+
+        return sessionRepo.deleteByRefreshToken(refreshToken);
+    }
+
+    @Transactional
+    long deleteAllSessions(Long userId){
+        return sessionRepo.deleteByUserId(userId);
     }
 
 }

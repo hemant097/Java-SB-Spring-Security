@@ -50,7 +50,7 @@ public class PostServiceImpl implements PostService {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        log.info("user {}",user);
+        log.info("user with email {} is trying to access post with id  {}",user.getUsername(), postId);
         Post post = postRepo.findById(postId)
                 .orElseThrow(()-> new ResourceNotFoundException("post not found with id "+postId));
 

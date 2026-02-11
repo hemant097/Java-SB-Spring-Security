@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -48,10 +47,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<APIError> authenticationExceptionHandler(AuthenticationException exception) {
 
+        String info = getExceptionNameAndMessage(exception);
         String currDT = giveCurrentDateTime();
 
         APIError apiError = APIError.builder()
-                .message(exception.getMessage())
+                .message(info)
                 .errorRecordedTime(currDT)
                 .httpStatus(HttpStatus.UNAUTHORIZED)
                 .build();
@@ -63,8 +63,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<APIError> otherExceptionHandler(Exception exception) {
 
+        String info = getExceptionNameAndMessage(exception);
+
         APIError apiError = APIError.builder()
-                .message(exception.getMessage())
+                .message(info)
                 .errorRecordedTime( giveCurrentDateTime() )
                 .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
                 .build();
@@ -75,5 +77,12 @@ public class GlobalExceptionHandler {
     //returns current date and time when called
     private String giveCurrentDateTime(){
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm"));
+    }
+
+    //returns an exception's class name and message
+    private String getExceptionNameAndMessage(Exception exception){
+        StringBuilder exceptionInfo = new StringBuilder(exception.getClass().getName()+" , "+ exception.getMessage());
+        return  exceptionInfo.toString();
+
     }
 }
