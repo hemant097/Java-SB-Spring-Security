@@ -1,4 +1,4 @@
-package com.example.week5.postapplication.Entities;
+package com.example.week5.postapplication.Entities.Enums;
 
 public enum Plan {
 

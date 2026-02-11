@@ -39,8 +39,6 @@ public class UserService implements UserDetailsService {
     public UserDto signUp(SignupDto signupDto){
         Optional<String> email = userRepository.findEmailByEmail( signupDto.getEmail() );
 
-
-
         if(email.isPresent())
             throw new UserAlreadyExistsException(email.get());
 

@@ -1,7 +1,7 @@
 package com.example.week5.postapplication.DTO;
 
 import com.example.week5.postapplication.Annotations.PasswordValidation;
-import com.example.week5.postapplication.Entities.Plan;
+import com.example.week5.postapplication.Entities.Enums.Plan;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
