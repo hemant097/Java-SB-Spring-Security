@@ -22,7 +22,7 @@ public class PostController {
         return new ResponseEntity<>(postService.getAllPosts(), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping( path = "/new")
     public ResponseEntity<PostDto> createNewPost(@Valid @RequestBody PostDto input){
         return new ResponseEntity<>(postService.createPost(input), HttpStatus.OK);
     }
