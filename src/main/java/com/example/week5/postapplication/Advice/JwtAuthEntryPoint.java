@@ -28,7 +28,7 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
 //        String message = jwtException != null ? jwtException.getMessage() : authEx.getMessage();
 
         String message = authEx.getLocalizedMessage();
-        authEx.printStackTrace();
+//        authEx.printStackTrace();
         System.out.println("Inside JwtAuthEntryPoint, message: " + message);
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

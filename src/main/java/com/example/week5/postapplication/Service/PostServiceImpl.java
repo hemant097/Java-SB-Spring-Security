@@ -51,9 +51,18 @@ public class PostServiceImpl implements PostService {
 //        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //
 //        log.info("user with email {} is trying to access post with id  {}",user.getUsername(), postId);
-        Post post = postRepo.findById(postId)
-                .orElseThrow(()-> new ResourceNotFoundException("post not found with id "+postId));
-
+        Post post = findPost(postId);
         return modelMapper.map(post,PostDto.class);
+    }
+
+    public void deleteAPost(Long postId){
+
+        Post post = findPost(postId);
+        postRepo.deleteById(post.getPostId());
+    }
+
+    public Post findPost(Long postId){
+       return postRepo.findById(postId)
+                .orElseThrow(()-> new ResourceNotFoundException("post not found with id "+postId));
     }
 }

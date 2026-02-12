@@ -1,6 +1,8 @@
 package com.example.week5.postapplication.Service;
 
+import com.example.week5.postapplication.DTO.AuthorizationAssignmentRequest;
 import com.example.week5.postapplication.DTO.UserDto;
+import com.example.week5.postapplication.Entities.Enums.Permission;
 import com.example.week5.postapplication.Entities.Enums.Role;
 import com.example.week5.postapplication.Entities.User;
 import com.example.week5.postapplication.Repository.UserRepository;
@@ -8,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -20,17 +21,27 @@ public class AdminService {
     private final ModelMapper modelMapper;
 
 
-     public UserDto assignRolesToUser(Long userId, Set<Role> roleSet){
+     public UserDto assignRolesAndPrivilegesToUser(Long userId, AuthorizationAssignmentRequest authorizationAssignmentRequest){
 
-        User user = userService.getUserById(userId);
+         Set<Role> roleSet = authorizationAssignmentRequest.getRoles();
+         Set<Permission> privileges = authorizationAssignmentRequest.getPermissions();
 
+         User user = userService.getUserById(userId);
+
+         //assigning ROLES
         if(user.getRoles() == null)
             user.setRoles(roleSet);
         else
             user.getRoles().addAll(roleSet);
 
-        User savedUser = userRepo.save(user);
+        //assigning PRIVILEGES
+         if(user.getPermissions() == null)
+             user.setPermissions(privileges);
+         else
+             user.getPermissions().addAll(privileges);
 
+        User savedUser = userRepo.save(user);
         return modelMapper.map(savedUser, UserDto.class);
     }
+
 }

@@ -59,7 +59,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }catch (JwtException ex){
 //            System.out.println("Auth before: " + SecurityContextHolder.getContext().getAuthentication());
-            System.out.println("JWT Exception: " + ex.getLocalizedMessage());
+            System.out.println("JWT Exception occured inside JwtAuthFilter ");
 
 //            JwtAuthenticationException jwtAuthEx = new JwtAuthenticationException(ex.getLocalizedMessage());
 //            request.setAttribute("jwtException", jwtAuthEx);

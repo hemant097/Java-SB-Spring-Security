@@ -1,6 +1,7 @@
 package com.example.week5.postapplication.Config;
 
 import com.example.week5.postapplication.Advice.JwtAuthEntryPoint;
+import com.example.week5.postapplication.Entities.Enums.Permission;
 import com.example.week5.postapplication.Filter.JwtAuthFilter;
 import com.example.week5.postapplication.Filter.HttpLoggingFilter;
 import com.example.week5.postapplication.Handler.OAuth2SuccessHandler;
@@ -16,8 +17,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.example.week5.postapplication.Entities.Enums.Role.ADMIN;
-import static com.example.week5.postapplication.Entities.Enums.Role.CREATOR;
+import static com.example.week5.postapplication.Entities.Enums.Role.*;
+import static com.example.week5.postapplication.Entities.Enums.Permission.*;
 
 @Configuration @EnableWebSecurity
 @RequiredArgsConstructor
@@ -37,9 +38,21 @@ public class WebSecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(publicRoutes).permitAll()
-                        .requestMatchers(HttpMethod.GET,"/post/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/post/**").hasAnyRole(ADMIN.name(), CREATOR.name())
-                        .requestMatchers(HttpMethod.DELETE,"/post/**").hasRole(ADMIN.name())
+
+                        .requestMatchers(HttpMethod.GET,"/post").permitAll()
+
+                        .requestMatchers(HttpMethod.POST,"/post/**")
+                            .hasAnyRole(USER.name(), CREATOR.name())
+
+                        .requestMatchers(HttpMethod.GET,"/post/**")
+                            .hasAuthority(POST_READ.name())
+
+                        .requestMatchers(HttpMethod.PUT,"/post/**")
+                            .hasAnyAuthority(POST_UPDATE.name())
+
+                        .requestMatchers(HttpMethod.DELETE,"/post/**")
+                            .hasAnyAuthority(POST_DELETE.name())
+
                         .anyRequest().authenticated() )
                 .csrf(csrfConfig -> csrfConfig.disable() )
                 .sessionManagement( sessionConfig -> sessionConfig
@@ -53,6 +66,8 @@ public class WebSecurityConfig {
 //                .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthEntryPoint))
                 ;
 //                .formLogin(Customizer.withDefaults());
+
+        //Due to some reason exceptionHandling method here , causing problems with oauth2login, thus commented out
 
         return httpSecurity.build();
     }
