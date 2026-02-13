@@ -53,6 +53,8 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.DELETE,"/post/**")
                             .hasAnyAuthority(POST_DELETE.name())
 
+                        .requestMatchers("/admin/**").hasRole(ADMIN.name())
+
                         .anyRequest().authenticated() )
                 .csrf(csrfConfig -> csrfConfig.disable() )
                 .sessionManagement( sessionConfig -> sessionConfig

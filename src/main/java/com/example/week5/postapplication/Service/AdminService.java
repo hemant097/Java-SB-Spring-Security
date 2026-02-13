@@ -1,8 +1,6 @@
 package com.example.week5.postapplication.Service;
 
-import com.example.week5.postapplication.DTO.AuthorizationAssignmentRequest;
 import com.example.week5.postapplication.DTO.UserDto;
-import com.example.week5.postapplication.Entities.Enums.Permission;
 import com.example.week5.postapplication.Entities.Enums.Role;
 import com.example.week5.postapplication.Entities.User;
 import com.example.week5.postapplication.Repository.UserRepository;
@@ -21,10 +19,7 @@ public class AdminService {
     private final ModelMapper modelMapper;
 
 
-     public UserDto assignRolesAndPrivilegesToUser(Long userId, AuthorizationAssignmentRequest authorizationAssignmentRequest){
-
-         Set<Role> roleSet = authorizationAssignmentRequest.getRoles();
-         Set<Permission> privileges = authorizationAssignmentRequest.getPermissions();
+     public UserDto assignRoles(Long userId, Set<Role> roleSet){
 
          User user = userService.getUserById(userId);
 
@@ -33,12 +28,6 @@ public class AdminService {
             user.setRoles(roleSet);
         else
             user.getRoles().addAll(roleSet);
-
-        //assigning PRIVILEGES
-         if(user.getPermissions() == null)
-             user.setPermissions(privileges);
-         else
-             user.getPermissions().addAll(privileges);
 
         User savedUser = userRepo.save(user);
         return modelMapper.map(savedUser, UserDto.class);

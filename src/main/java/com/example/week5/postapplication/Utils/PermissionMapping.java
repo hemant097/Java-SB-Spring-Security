@@ -13,10 +13,15 @@ import static com.example.week5.postapplication.Entities.Enums.Role.*;
 
 public class PermissionMapping {
 
-    private static Map<Role, Set<Permission>> permissionData = Map.of(
-            USER, Set.of(USER_READ, POST_READ),
-            CREATOR, Set.of(POST_CREATE, USER_CREATE, POST_UPDATE, USER_UPDATE, POST_DELETE),
-            ADMIN, Set.of(POST_CREATE, POST_UPDATE, POST_DELETE, POST_READ, USER_CREATE, USER_DELETE, USER_UPDATE, USER_READ)
+
+    static Set<Permission> userPermissions = Set.of(USER_READ, POST_READ, USER_UPDATE);
+    static Set<Permission> creatorPermissions = Set.of(POST_CREATE, POST_UPDATE, POST_DELETE,POST_READ, USER_UPDATE, USER_READ);
+    static Set<Permission> adminPermissions = Set.of(POST_CREATE, POST_UPDATE, POST_DELETE, POST_READ, USER_CREATE, USER_DELETE, USER_UPDATE, USER_READ);
+
+    private static final Map<Role, Set<Permission>> permissionData = Map.of(
+            USER, userPermissions,
+            CREATOR, creatorPermissions,
+            ADMIN, adminPermissions
     );
 
     public static Set<SimpleGrantedAuthority> getAuthoritiesForARole(Role role){

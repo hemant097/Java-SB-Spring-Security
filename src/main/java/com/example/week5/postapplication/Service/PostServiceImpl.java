@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -59,6 +60,18 @@ public class PostServiceImpl implements PostService {
 
         Post post = findPost(postId);
         postRepo.deleteById(post.getPostId());
+    }
+
+    @Override
+    public PostDto updatePostById(Long postId, PostDto postDto) {
+        Post postToUpdate = findPost(postId);
+
+        postToUpdate.setTitle( postDto.getTitle());
+        postToUpdate.setDescription( postDto.getDescription());
+
+        Post updatedPost =  postRepo.save(postToUpdate);
+
+        return modelMapper.map(updatedPost,PostDto.class);
     }
 
     public Post findPost(Long postId){

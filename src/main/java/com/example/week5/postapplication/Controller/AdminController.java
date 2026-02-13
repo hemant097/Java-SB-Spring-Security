@@ -1,11 +1,13 @@
 package com.example.week5.postapplication.Controller;
 
-import com.example.week5.postapplication.DTO.AuthorizationAssignmentRequest;
 import com.example.week5.postapplication.DTO.UserDto;
+import com.example.week5.postapplication.Entities.Enums.Role;
 import com.example.week5.postapplication.Service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 @RestController
 @RequestMapping(path = "/admin")
@@ -16,9 +18,9 @@ public class AdminController {
 
     @PostMapping("/{userid}")
     ResponseEntity<UserDto> assignRoles(@PathVariable(name = "userid") Long userId,
-                                        @RequestBody AuthorizationAssignmentRequest authorizationAssignmentRequest){
+                                        @RequestBody Set<Role> roleSet){
 
-        UserDto userDto = adminService.assignRolesAndPrivilegesToUser(userId, authorizationAssignmentRequest);
+        UserDto userDto = adminService.assignRoles(userId, roleSet);
         return ResponseEntity.ok(userDto);
     }
 }
