@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,6 +23,7 @@ import static com.example.week5.postapplication.Entities.Enums.Permission.*;
 
 @Configuration @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
@@ -38,20 +40,7 @@ public class WebSecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(publicRoutes).permitAll()
-
-                        .requestMatchers(HttpMethod.GET,"/post").permitAll()
-
-                        .requestMatchers(HttpMethod.POST,"/post/**")
-                            .hasAnyRole(USER.name(), CREATOR.name())
-
-                        .requestMatchers(HttpMethod.GET,"/post/**")
-                            .hasAuthority(POST_READ.name())
-
-                        .requestMatchers(HttpMethod.PUT,"/post/**")
-                            .hasAnyAuthority(POST_UPDATE.name())
-
-                        .requestMatchers(HttpMethod.DELETE,"/post/**")
-                            .hasAnyAuthority(POST_DELETE.name())
+                        .requestMatchers("/post/**").authenticated()
 
                         .requestMatchers("/admin/**").hasRole(ADMIN.name())
 

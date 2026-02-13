@@ -12,3 +12,15 @@
 
 #### 6. Creating custom filters using OncePerRequestFilter
 
+#### 7. Refresh token and Access token based authentication
+
+#### 8. Google OAuth2 Client Authentication
+
+#### 9. User session management in JWT
+
+#### 10. Role based and Granular authorization with authorities, permission in Spring Security
+
+#### 11. Security method annotations, @Secured and @PreAuthorize
+
+
+

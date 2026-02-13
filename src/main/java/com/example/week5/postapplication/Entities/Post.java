@@ -1,5 +1,6 @@
 package com.example.week5.postapplication.Entities;
 
+import com.example.week5.postapplication.DTO.UserDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,4 +22,8 @@ public class Post {
 
     @CreationTimestamp
     private LocalDateTime createdTime;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User author;
 }

@@ -1,5 +1,6 @@
 package com.example.week5.postapplication.DTO;
 
+import com.example.week5.postapplication.Entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,4 +30,7 @@ public class PostDto {
 
     @JsonFormat(pattern = "dd-MMM-yyyy HH:mm:ss")
     private LocalDateTime createdTime;
+
+    //this is set in PostService using SecurityContext
+    private UserDto author;
 }

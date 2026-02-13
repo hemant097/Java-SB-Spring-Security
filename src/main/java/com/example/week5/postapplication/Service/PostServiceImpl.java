@@ -27,9 +27,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDto createPost(PostDto inputPost) {
 
-        Post post = modelMapper.map(inputPost, Post.class);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        System.out.println(post.getTitle());
+        Post post = modelMapper.map(inputPost, Post.class);
+        post.setAuthor(user);
 
         return modelMapper.map(postRepo.save(post), PostDto.class);
 

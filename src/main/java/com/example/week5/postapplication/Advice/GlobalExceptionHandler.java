@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -57,6 +59,21 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<APIError> accessDeniedExceptionExceptionHandler(AccessDeniedException exception) {
+
+        String info = getExceptionNameAndMessage(exception);
+        String currDT = giveCurrentDateTime();
+
+        APIError apiError = APIError.builder()
+                .message(info)
+                .errorRecordedTime(currDT)
+                .httpStatus(HttpStatus.FORBIDDEN)
+                .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 
     //handles every other exception
